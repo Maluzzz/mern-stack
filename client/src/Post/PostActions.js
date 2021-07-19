@@ -13,7 +13,8 @@ export function addPost(post) {
   };
 }
 
-export function addPostRequest(post) {
+
+export function addPostRequest(post,token) {
   return (dispatch) => {
     return callApi('posts', 'post', {
       post: {
@@ -21,8 +22,8 @@ export function addPostRequest(post) {
         title: post.title,
         content: post.content,
       },
-    }).then(res => dispatch(addPost(res.post)));
-  };
+    },token).then(res => dispatch(addPost(res.post)));
+  }
 }
 
 export function addPosts(posts) {
@@ -32,9 +33,9 @@ export function addPosts(posts) {
   };
 }
 
-export function fetchPosts() {
+export function fetchPosts(token) {
   return (dispatch) => {
-    return callApi('posts').then(res => {
+    return callApi('posts','get',undefined,token).then(res => {
       dispatch(addPosts(res.posts));
     });
   };
@@ -42,7 +43,7 @@ export function fetchPosts() {
 
 export function fetchPost(cuid) {
   return (dispatch) => {
-    return callApi(`posts/${cuid}`).then(res => dispatch(addPost(res.post)));
+    return callApi(`posts/:${cuid}`).then(res => dispatch(addPost(res.post)));
   };
 }
 
@@ -53,8 +54,8 @@ export function deletePost(cuid) {
   };
 }
 
-export function deletePostRequest(cuid) {
+export function deletePostRequest(cuid,token) {
   return (dispatch) => {
-    return callApi(`posts/${cuid}`, 'delete').then(() => dispatch(deletePost(cuid)));
+    return callApi(`posts/${cuid}`, 'delete',undefined,token).then(() => dispatch(deletePost(cuid)));
   };
 }
